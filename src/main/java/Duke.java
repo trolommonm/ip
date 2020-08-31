@@ -1,6 +1,5 @@
 import java.util.Arrays;
 import java.util.Scanner;
-import java.util.ArrayList;
 
 public class Duke {
     private static TaskManager taskManager = new TaskManager();
@@ -51,8 +50,7 @@ public class Duke {
                 }
 
                 try {
-                    String description = String.join(" ",
-                            Arrays.copyOfRange(inputSplit, 1, indexOfBy));
+                    String description = String.join(" ", Arrays.copyOfRange(inputSplit, 1, indexOfBy));
                     String by = String.join(" ",
                             Arrays.copyOfRange(inputSplit, indexOfBy + 1, inputSplit.length));
                     Deadline newDeadline = new Deadline(description, by);
@@ -70,8 +68,7 @@ public class Duke {
                 }
 
                 try {
-                    String description = String.join(" ",
-                            Arrays.copyOfRange(inputSplit, 1, indexOfAt));
+                    String description = String.join(" ", Arrays.copyOfRange(inputSplit, 1, indexOfAt));
                     String at = String.join(" ",
                             Arrays.copyOfRange(inputSplit, indexOfAt + 1, inputSplit.length));
                     Event newEvent = new Event(description, at);
