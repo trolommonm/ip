@@ -1,3 +1,10 @@
+import Common.CommonFunctions;
+import Task.Deadline;
+import Task.Event;
+import Task.TaskManager;
+import Task.Todo;
+import Exception.DukeException;
+
 import java.util.Arrays;
 import java.util.Scanner;
 

@@ -1,3 +1,5 @@
+package Common;
+
 public class CommonFunctions {
     private static final String dividerLine = "____________________________________________________________";
 
