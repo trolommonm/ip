@@ -31,17 +31,21 @@ public class Duke {
         int indexOfBy = Arrays.asList(inputSplit).indexOf("/by");
 
         if (indexOfBy == -1) {
-            throw new DukeException("Please input the deadline of the task!");
-        }
-
-        String description = String.join(" ", Arrays.copyOfRange(inputSplit, 1, indexOfBy));
-
-        if (description.isEmpty()) {
             throw new DukeException("Please input the description and/or deadline of the task!");
         }
 
+        String description = String.join(" ", Arrays.copyOfRange(inputSplit, 1, indexOfBy));
         String by = String.join(" ",
                 Arrays.copyOfRange(inputSplit, indexOfBy + 1, inputSplit.length));
+
+        if (description.isEmpty() && by.isEmpty()) {
+            throw new DukeException("Please input the description and deadline of the task!");
+        } else if (description.isEmpty()) {
+            throw new DukeException("Please input the description of the task!");
+        } else if (by.isEmpty()) {
+            throw new DukeException("Please input the deadline of the task!");
+        }
+
         Deadline newDeadline = new Deadline(description, by);
         taskManager.addTask(newDeadline);
     }
@@ -50,17 +54,21 @@ public class Duke {
         int indexOfAt = Arrays.asList(inputSplit).indexOf("/at");
 
         if (indexOfAt == -1) {
-            throw new DukeException("Please input the duration of the event!");
-        }
-
-        String description = String.join(" ", Arrays.copyOfRange(inputSplit, 1, indexOfAt));
-
-        if (description.isEmpty()) {
             throw new DukeException("Please input the description and/or duration of the event!");
         }
 
+        String description = String.join(" ", Arrays.copyOfRange(inputSplit, 1, indexOfAt));
         String at = String.join(" ",
                 Arrays.copyOfRange(inputSplit, indexOfAt + 1, inputSplit.length));
+
+        if (description.isEmpty() && at.isEmpty()) {
+            throw new DukeException("Please input the description and duration of the event!");
+        } else if (description.isEmpty()) {
+            throw new DukeException("Please input the description of the event!");
+        } else if (at.isEmpty()) {
+            throw new DukeException("Please input the duration of the event!");
+        }
+
         Event newEvent = new Event(description, at);
         taskManager.addTask(newEvent);
     }
