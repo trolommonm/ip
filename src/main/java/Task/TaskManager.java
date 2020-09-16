@@ -44,7 +44,7 @@ public class TaskManager {
 
     public void deleteTask(int indexOfTask) {
         try {
-            Task removedTask = tasksList.remove(indexOfTask);
+            Task removedTask = taskList.remove(indexOfTask);
 
             CommonFunctions.printDivider();
             CommonFunctions.printWithIndentation("Noted. I've removed this task:");
