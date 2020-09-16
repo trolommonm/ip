@@ -3,6 +3,7 @@ package Task;
 import Common.CommonFunctions;
 import Storage.Storage;
 
+import java.awt.color.CMMException;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -51,8 +52,12 @@ public class TaskManager {
             CommonFunctions.printWithIndentation(removedTask.toString());
             CommonFunctions.printWithIndentation("Now you have " + getNumberOfTasks() + " in the list.");
             CommonFunctions.printDivider();
+
+            storage.saveTaskListToFile(taskList);
         } catch (IndexOutOfBoundsException e) {
             CommonFunctions.printMessage("Index out of bounds!");
+        } catch (IOException e) {
+            CommonFunctions.printMessage(e.getMessage());
         }
     }
 
