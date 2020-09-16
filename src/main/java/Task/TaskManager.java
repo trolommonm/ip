@@ -1,27 +1,45 @@
 package Task;
 
 import Common.CommonFunctions;
+import Storage.Storage;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class TaskManager {
-    private ArrayList<Task> tasksList = new ArrayList<Task>();
+    private ArrayList<Task> taskList = new ArrayList<Task>();
+    private Storage storage = new Storage();
+
+    public TaskManager() {
+        try {
+            taskList = storage.retrieveTasks();
+        } catch (FileNotFoundException e) {
+            CommonFunctions.printMessage(e.getMessage());
+        }
+    }
 
     public ArrayList<Task> getTasksList() {
-        return tasksList;
+        return taskList;
     }
 
     public int getNumberOfTasks() {
-        return tasksList.size();
+        return taskList.size();
     }
 
     public void addTask(Task task) {
-        tasksList.add(task);
+        taskList.add(task);
         CommonFunctions.printDivider();
         CommonFunctions.printWithIndentation("Got it. I've added this task:");
         CommonFunctions.printWithIndentation(task.toString());
         CommonFunctions.printWithIndentation("Now you have " + getNumberOfTasks() + " tasks in the list.");
         CommonFunctions.printDivider();
+
+        try {
+            storage.saveTaskListToFile(taskList);
+        } catch (IOException e) {
+            CommonFunctions.printMessage(e.getMessage());
+        }
     }
 
     public void deleteTask(int indexOfTask) {
@@ -40,18 +58,22 @@ public class TaskManager {
 
     public void markTaskAsDone(int indexOfTask) {
         try {
-            Task task = tasksList.get(indexOfTask);
+            Task task = taskList.get(indexOfTask);
             task.markAsDone();
             CommonFunctions.printMessage("Nice! I've marked this task as done:\n\t" + task.toString());
+
+            storage.saveTaskListToFile(taskList);
         } catch (IndexOutOfBoundsException e) {
             CommonFunctions.printMessage("Index out of bounds!");
+        } catch (IOException e) {
+            CommonFunctions.printMessage(e.getMessage());
         }
     }
 
     public void printTasks() {
         CommonFunctions.printDivider();
         for (int i = 0; i < getNumberOfTasks(); i++) {
-            CommonFunctions.printWithIndentation((i + 1) + ". " + tasksList.get(i));
+            CommonFunctions.printWithIndentation((i + 1) + ". " + taskList.get(i));
         }
         CommonFunctions.printDivider();
     }
