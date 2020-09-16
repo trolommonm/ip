@@ -80,6 +80,17 @@ public class Duke {
         taskManager.addTask(newEvent);
     }
 
+    private static void handleDelete(String[] inputSplit) throws DukeException {
+        try {
+            int indexOfTask = Integer.parseInt(inputSplit[1]) - 1;
+            taskManager.deleteTask(indexOfTask);
+        } catch (NumberFormatException e) {
+            throw new DukeException("Please input a valid index of task!");
+        } catch (IndexOutOfBoundsException e) {
+            throw new DukeException("Please input the index of task you want to delete!");
+        }
+    }
+
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
 
@@ -121,6 +132,13 @@ public class Duke {
             case "event":
                 try {
                     handleEvent(inputSplit);
+                } catch (DukeException e) {
+                    CommonFunctions.printMessage(e.getMessage());
+                }
+                break;
+            case "delete":
+                try {
+                    handleDelete(inputSplit);
                 } catch (DukeException e) {
                     CommonFunctions.printMessage(e.getMessage());
                 }

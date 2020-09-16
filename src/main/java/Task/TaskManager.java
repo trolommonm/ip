@@ -24,6 +24,20 @@ public class TaskManager {
         CommonFunctions.printDivider();
     }
 
+    public void deleteTask(int indexOfTask) {
+        try {
+            Task removedTask = tasksList.remove(indexOfTask);
+
+            CommonFunctions.printDivider();
+            CommonFunctions.printWithIndentation("Noted. I've removed this task:");
+            CommonFunctions.printWithIndentation(removedTask.toString());
+            CommonFunctions.printWithIndentation("Now you have " + getNumberOfTasks() + " in the list.");
+            CommonFunctions.printDivider();
+        } catch (IndexOutOfBoundsException e) {
+            CommonFunctions.printMessage("Index out of bounds!");
+        }
+    }
+
     public void markTaskAsDone(int indexOfTask) {
         try {
             Task task = tasksList.get(indexOfTask);
