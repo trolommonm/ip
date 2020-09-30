@@ -12,16 +12,23 @@ import Command.EventCommand;
 import Command.DeleteCommand;
 import Command.FindCommand;
 
-import Task.Task;
 import Ui.Ui;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 
+/**
+ * Handles the parsing of the user inputs into the chatbox.
+ */
 public class Parser {
 
     private Ui ui = new Ui();
 
+    /**
+     * Handles the extracting of the index of tasks specified by the user to be marked as done.
+     * @param inputSplit User input that has already been split by an empty space
+     * @return DoneCommand object
+     * @throws DukeException If an invalid index of task is specified or no index of task specified.
+     */
     private DoneCommand handleDone(String[] inputSplit) throws DukeException {
         try {
             int indexOfTask = Integer.parseInt(inputSplit[1]) - 1;
@@ -33,6 +40,12 @@ public class Parser {
         }
     }
 
+    /**
+     * Handles the extraction of the description of the Todo task.
+     * @param inputSplit User input that has already been split by an empty space
+     * @return TodoCommand object
+     * @throws DukeException If no description is input by the user.
+     */
     private TodoCommand handleTodo(String[] inputSplit) throws DukeException {
         String description = String.join(" ",
                 Arrays.copyOfRange(inputSplit, 1, inputSplit.length));
@@ -44,6 +57,13 @@ public class Parser {
         return new TodoCommand(description);
     }
 
+    /**
+     * Handles the splitting of the user input to extract the description
+     * and the deadline of the Deadline task.
+     * @param inputSplit User input that has already been split by an empty space
+     * @return DeadlineCommand object
+     * @throws DukeException If description and/or deadline of task is not input
+     */
     private DeadlineCommand handleDeadline(String[] inputSplit) throws DukeException {
         int indexOfBy = Arrays.asList(inputSplit).indexOf("/by");
 
@@ -66,6 +86,13 @@ public class Parser {
         return new DeadlineCommand(description, by);
     }
 
+    /**
+     * Handles the splitting of the user input to extract the description
+     * and the duration of the Event task.
+     * @param inputSplit User input that has already been split by an empty space
+     * @return EventCommand object
+     * @throws DukeException If description and/or duration of task is not input
+     */
     private EventCommand handleEvent(String[] inputSplit) throws DukeException {
         int indexOfAt = Arrays.asList(inputSplit).indexOf("/at");
 
@@ -88,6 +115,12 @@ public class Parser {
         return new EventCommand(description, at);
     }
 
+    /**
+     * Handles the splitting of the user input to extract the index of task to be deleted.
+     * @param inputSplit User input that has already been split by an empty space
+     * @return DeleteCommand object
+     * @throws DukeException If an invalid index of task is specified or no index of task specified.
+     */
     private DeleteCommand handleDelete(String[] inputSplit) throws DukeException {
         try {
             int indexOfTask = Integer.parseInt(inputSplit[1]) - 1;
@@ -99,6 +132,12 @@ public class Parser {
         }
     }
 
+    /**
+     * Handles the splitting of the user input to extract the keyword to be searched.
+     * @param inputSplit User input that has already been split by an empty space
+     * @return FindCommand object
+     * @throws DukeException If no keyword is specified.
+     */
     private FindCommand handleFind(String[] inputSplit) throws DukeException {
         try {
             String keyword = inputSplit[1];
@@ -108,6 +147,11 @@ public class Parser {
         }
     }
 
+    /**
+     * Parse the user input
+     * @param input User input
+     * @return Command Object
+     */
     public Command parseCommand(String input) {
         String[] inputSplit = input.split(" ");
         String command = input.trim().toLowerCase().split(" ")[0];

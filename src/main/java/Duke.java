@@ -19,6 +19,9 @@ import Task.Todo;
 
 import java.util.Scanner;
 
+/**
+ * Contains the main initializations for the chatbot.
+ */
 public class Duke {
 
     public static void main(String[] args) {
