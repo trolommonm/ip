@@ -44,4 +44,13 @@ public class Ui {
         }
         printDivider();
     }
+
+    public void printFilteredTasks(ArrayList<Task> taskList) {
+        printDivider();
+        printWithIndentation("Here are the matching tasks in your list:");
+        for (int i = 0; i < taskList.size(); i++) {
+            printWithIndentation((i + 1) + ". " + taskList.get(i));
+        }
+        printDivider();
+    }
 }

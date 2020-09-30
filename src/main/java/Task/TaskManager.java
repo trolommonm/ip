@@ -59,6 +59,17 @@ public class TaskManager {
         }
     }
 
+    public void findAndPrintFilteredTasks(String keyword) {
+        ArrayList<Task> filteredTaskList = new ArrayList<Task>();
+        for (Task t: getTasksList()) {
+            if (t.getDescription().contains(keyword)) {
+                filteredTaskList.add(t);
+            }
+        }
+
+        ui.printFilteredTasks(filteredTaskList);
+    }
+
     public void markTaskAsDone(int indexOfTask) {
         try {
             Task task = taskList.get(indexOfTask);

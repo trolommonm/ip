@@ -60,6 +60,9 @@ public class Duke {
             } else if (command instanceof DeleteCommand) {
                 DeleteCommand deleteCommand = (DeleteCommand)command;
                 taskManager.deleteTask(deleteCommand.getIndexOfTask());
+            } else if (command instanceof FindCommand) {
+                FindCommand findCommand = (FindCommand)command;
+                taskManager.findAndPrintFilteredTasks(findCommand.getKeyword());
             }
 
         }
