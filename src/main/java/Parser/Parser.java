@@ -143,7 +143,7 @@ public class Parser {
             String keyword = inputSplit[1];
             return new FindCommand(keyword);
         } catch (IndexOutOfBoundsException e) {
-            throw new DukeException("Please input a keyword to search for!");
+            throw new DukeException("Please input a keyword to search for in your tasks!");
         }
     }
 
