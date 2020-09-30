@@ -20,12 +20,12 @@ import Task.Todo;
 import java.util.Scanner;
 
 /**
- * Contains the main initializations for the chatbot.
+ * Contains the main initializations for the Duke chat bot program
  */
 public class Duke {
 
     public static void main(String[] args) {
-        // initializations
+
         TaskManager taskManager = new TaskManager();
         Parser parser = new Parser();
         Ui ui = new Ui();
