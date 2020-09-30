@@ -1,6 +1,6 @@
 package Storage;
 
-import Common.CommonFunctions;
+import Ui.Ui;
 import Task.Task;
 import Task.Todo;
 import Task.Event;
@@ -15,6 +15,7 @@ import java.util.Scanner;
 
 public class Storage {
     private File dukeFile;
+    private Ui ui = new Ui();
 
     public Storage() {
         createDataFolder();
@@ -27,7 +28,7 @@ public class Storage {
             try {
                 dataFolder.mkdir();
             } catch (SecurityException e) {
-                CommonFunctions.printMessage(e.getMessage());
+                ui.printMessageWithDivider(e.getMessage());
             }
         }
     }
@@ -38,9 +39,9 @@ public class Storage {
             try {
                 dukeFile.createNewFile();
             } catch (SecurityException e) {
-                CommonFunctions.printMessage(e.getMessage());
+                ui.printMessageWithDivider(e.getMessage());
             } catch (IOException e) {
-                CommonFunctions.printMessage(e.getMessage());
+                ui.printMessageWithDivider(e.getMessage());
             }
         }
 
@@ -88,7 +89,7 @@ public class Storage {
                 task = new Deadline(lineSplit[2], lineSplit[3]);
                 break;
             default:
-                CommonFunctions.printMessage("Invalid task detected in Duke.txt!");
+                ui.printMessageWithDivider("Invalid task detected in Duke.txt!");
                 return new ArrayList<Task>();
             }
 

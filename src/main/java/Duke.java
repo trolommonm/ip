@@ -1,152 +1,67 @@
-import Common.CommonFunctions;
+import Command.Command;
+import Command.DoneCommand;
+import Command.ListCommand;
+import Command.TodoCommand;
+import Command.ByeCommand;
+import Command.DeadlineCommand;
+import Command.EventCommand;
+import Command.DeleteCommand;
+import Command.FindCommand;
+
+import Ui.Ui;
+
+import Parser.Parser;
+
 import Task.Deadline;
 import Task.Event;
 import Task.TaskManager;
 import Task.Todo;
-import Exception.DukeException;
 
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class Duke {
-    private static TaskManager taskManager = new TaskManager();
-
-    private static void handleDone(String[] inputSplit) throws DukeException {
-        try {
-            int indexOfTask = Integer.parseInt(inputSplit[1]) - 1;
-            taskManager.markTaskAsDone(indexOfTask);
-        } catch (NumberFormatException e) {
-            throw new DukeException("Invalid index of task!");
-        } catch (IndexOutOfBoundsException e) {
-            throw new DukeException("Please input the index of the task to be marked as done!");
-        }
-    }
-
-    private static void handleTodo(String[] inputSplit) throws DukeException {
-        String description = String.join(" ",
-                Arrays.copyOfRange(inputSplit, 1, inputSplit.length));
-
-        if (description.isEmpty()) {
-            throw new DukeException("Please input the description!");
-        }
-
-        Todo newTodo = new Todo(description);
-        taskManager.addTask(newTodo);
-    }
-
-    private static void handleDeadline(String[] inputSplit) throws DukeException {
-        int indexOfBy = Arrays.asList(inputSplit).indexOf("/by");
-
-        if (indexOfBy == -1) {
-            throw new DukeException("Please input the description and/or deadline of the task!");
-        }
-
-        String description = String.join(" ", Arrays.copyOfRange(inputSplit, 1, indexOfBy));
-        String by = String.join(" ",
-                Arrays.copyOfRange(inputSplit, indexOfBy + 1, inputSplit.length));
-
-        if (description.isEmpty() && by.isEmpty()) {
-            throw new DukeException("Please input the description and deadline of the task!");
-        } else if (description.isEmpty()) {
-            throw new DukeException("Please input the description of the task!");
-        } else if (by.isEmpty()) {
-            throw new DukeException("Please input the deadline of the task!");
-        }
-
-        Deadline newDeadline = new Deadline(description, by);
-        taskManager.addTask(newDeadline);
-    }
-
-    private static void handleEvent(String[] inputSplit) throws DukeException {
-        int indexOfAt = Arrays.asList(inputSplit).indexOf("/at");
-
-        if (indexOfAt == -1) {
-            throw new DukeException("Please input the description and/or duration of the event!");
-        }
-
-        String description = String.join(" ", Arrays.copyOfRange(inputSplit, 1, indexOfAt));
-        String at = String.join(" ",
-                Arrays.copyOfRange(inputSplit, indexOfAt + 1, inputSplit.length));
-
-        if (description.isEmpty() && at.isEmpty()) {
-            throw new DukeException("Please input the description and duration of the event!");
-        } else if (description.isEmpty()) {
-            throw new DukeException("Please input the description of the event!");
-        } else if (at.isEmpty()) {
-            throw new DukeException("Please input the duration of the event!");
-        }
-
-        Event newEvent = new Event(description, at);
-        taskManager.addTask(newEvent);
-    }
-
-    private static void handleDelete(String[] inputSplit) throws DukeException {
-        try {
-            int indexOfTask = Integer.parseInt(inputSplit[1]) - 1;
-            taskManager.deleteTask(indexOfTask);
-        } catch (NumberFormatException e) {
-            throw new DukeException("Please input a valid index of task!");
-        } catch (IndexOutOfBoundsException e) {
-            throw new DukeException("Please input the index of task you want to delete!");
-        }
-    }
 
     public static void main(String[] args) {
+        // initializations
+        TaskManager taskManager = new TaskManager();
+        Parser parser = new Parser();
+        Ui ui = new Ui();
         Scanner sc = new Scanner(System.in);
 
-        taskManager.printIntroduction();
+        ui.printIntroduction();
+
+        Command command = new Command();
+        String input;
 
         while (true) {
-            String input = sc.nextLine();
-            String[] inputSplit = input.split(" ");
-            String command = input.trim().toLowerCase().split(" ")[0];
+            input = sc.nextLine();
+            command = parser.parseCommand(input);
 
-            switch (command) {
-            case "list":
-                taskManager.printTasks();
+            if (command instanceof ListCommand) {
+                ui.printTasks(taskManager.getTasksList());
+            } else if (command instanceof ByeCommand) {
+                ui.printGoodBye();
                 break;
-            case "bye":
-                taskManager.printGoodBye();
-                return;
-            case "done":
-                try {
-                    handleDone(inputSplit);
-                } catch (DukeException e) {
-                    CommonFunctions.printMessage(e.getMessage());
-                }
-                break;
-            case "todo":
-                try {
-                    handleTodo(inputSplit);
-                } catch (DukeException e) {
-                    CommonFunctions.printMessage(e.getMessage());
-                }
-                break;
-            case "deadline":
-                try {
-                    handleDeadline(inputSplit);
-                } catch (DukeException e) {
-                    CommonFunctions.printMessage(e.getMessage());
-                }
-                break;
-            case "event":
-                try {
-                    handleEvent(inputSplit);
-                } catch (DukeException e) {
-                    CommonFunctions.printMessage(e.getMessage());
-                }
-                break;
-            case "delete":
-                try {
-                    handleDelete(inputSplit);
-                } catch (DukeException e) {
-                    CommonFunctions.printMessage(e.getMessage());
-                }
-                break;
-            default:
-                CommonFunctions.printMessage("Error command, please try again!");
-                break;
+            } else if (command instanceof DoneCommand) {
+                DoneCommand doneCommand = (DoneCommand)command;
+                taskManager.markTaskAsDone(doneCommand.getIndexOfTask());
+            } else if (command instanceof TodoCommand) {
+                TodoCommand todoCommand = (TodoCommand)command;
+                Todo todoTask = new Todo(todoCommand.getDescription());
+                taskManager.addTask(todoTask);
+            } else if (command instanceof DeadlineCommand) {
+                DeadlineCommand deadlineCommand = (DeadlineCommand)command;
+                Deadline deadlineTask = new Deadline(deadlineCommand.getDescription(), deadlineCommand.getBy());
+                taskManager.addTask(deadlineTask);
+            } else if (command instanceof EventCommand) {
+                EventCommand eventCommand = (EventCommand)command;
+                Event eventTask = new Event(eventCommand.getDescription(), eventCommand.getAt());
+                taskManager.addTask(eventTask);
+            } else if (command instanceof DeleteCommand) {
+                DeleteCommand deleteCommand = (DeleteCommand)command;
+                taskManager.deleteTask(deleteCommand.getIndexOfTask());
             }
+
         }
     }
 }
